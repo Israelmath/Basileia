@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1074182119929",
+    "firebase_url": "https://basileia-da7df.firebaseio.com",
+    "project_id": "basileia-da7df",
+    "storage_bucket": "basileia-da7df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074182119929:android:40861dcf66c158559d1d28",
+        "android_client_info": {
+          "package_name": "com.example.basileia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1074182119929-8g9a6m9mqeennqnnc4cbbr79vhic3k70.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI8LC9lC2hcd2Hqz85YCpPiznCpEcXmXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1074182119929-8g9a6m9mqeennqnnc4cbbr79vhic3k70.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
