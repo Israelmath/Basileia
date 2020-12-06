@@ -24,8 +24,13 @@ class InfoCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset(iconLeft),
+                Container(
+                  child: Image.asset(iconLeft),
+                  width: 40,
+                  height: 40,
+                ),
                 Text(
                   localidade, //Basileia
                   style: TextStyle(

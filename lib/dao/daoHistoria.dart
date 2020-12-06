@@ -1,3 +1,4 @@
+import 'package:basileia/models/dadoHistoricoModelo.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -11,6 +12,8 @@ final String dataHist = 'dataHist';
 final String localHist = 'localHist';
 final String idCientRel = 'idCientRel';
 final String tipoAcontecimento = 'tipoAcontecimento';
+final String referencias = 'referencias';
+final String tblHistoria = 'historia';
 
 final String strCreateComand =
     "CREATE TABLE hists("
@@ -20,7 +23,8 @@ final String strCreateComand =
     "$dataHist TEXT NOT NULL,"
     "$localHist TEXT NULL,"
     "$idCientRel DATE NOT NULL,"
-    "$tipoAcontecimento TEXT NULL";
+    "$tipoAcontecimento TEXT NULL,"
+    "$referencias TEXT NULL";
 
 class HistDao {
 
@@ -41,33 +45,33 @@ class HistDao {
 
   initDb() async {
     final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, 'hists.db');
+    final path = join(databasesPath, '$tblHistoria.db');
 
     return await openDatabase(path, version: 1, onCreate: (Database db, int newerVersion) async {
       await db.execute(strCreateComand);
     });
   }
 
-  Future<Hist> salvaHist(Hist hist) async {
+  Future<Historia> salvaHist(Historia hist) async {
     Database dbHist = await db;
-    hist.histId = await dbHist.insert(tblHist, hist.toMap());
+    hist.histId = await dbHist.insert(tblHistoria, hist.toMap());
     return hist;
   }
 
   Future<List> buscaHist(int id) async {
     Database dbHist = await db;
-    List<Map<String, dynamic>> histsList = await dbHist.query(tblHist, where: '$histId = ?', whereArgs: [id]);
+    List<Map<String, dynamic>> histsList = await dbHist.query(tblHistoria, where: '$histId = ?', whereArgs: [id]);
     return histsList;
   }
 
   deletarHist(int id) async {
     Database dbHist = await db;
-    return await dbHist.delete(tblHist, where: '$histId = ?', whereArgs: [id]);
+    return await dbHist.delete(tblHistoria, where: '$histId = ?', whereArgs: [id]);
   }
 
   Future<List> buscaTodos() async {
     Database dbHist = await db;
-    List<Map<String, dynamic>> histsList = await dbHist.rawQuery("SELECT * FROM $tblHist");
+    List<Map<String, dynamic>> histsList = await dbHist.rawQuery("SELECT * FROM $tblHistoria");
     return histsList;
   }
 }

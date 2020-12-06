@@ -1,37 +1,37 @@
-class Cientista{
+class Historia{
 
-  int cientistaId;
-  String primeiroNome;
-  String sobrenome;
-  DateTime dataNascimento;
-  String localNascimento;
-  DateTime dataMorte;
-  String localMorte;
-  String ocupacao;
+  int histId;
+  String titulo;
+  String descricao;
+  DateTime dataHist;
+  String localHist;
+  DateTime idCientRel;
+  String tipoAcontecimento;
+  String referencias;
 
-  Cientista.fromMap(Map<String, dynamic> cientista){
-    this.cientistaId = cientista["cientistaId"];
-    this.primeiroNome = cientista["primeiroNome"];
-    this.sobrenome = cientista["sobrenome"];
-    this.dataNascimento = cientista["dataNascimento"];
-    this.localNascimento = cientista["localNascimento"];
-    this.dataMorte = cientista["dataMorte"];
-    this.localMorte = cientista["localMorte"];
-    this.ocupacao = cientista["ocupacao"];
+  Historia.fromMap(Map<String, dynamic> historia){
+    this.histId = historia["histId"];
+    this.titulo = historia["titulo"];
+    this.descricao = historia["descricao"];
+    this.dataHist = historia["dataHist"];
+    this.localHist = historia["localHist"];
+    this.idCientRel = historia["idCientRel"];
+    this.tipoAcontecimento = historia["tipoAcontecimento"];
+    this.referencias = historia["referencias"];
   }
 
   toMap(){
-    Map<String, dynamic> cientistaMap = {
-      'cientistaId' : this.cientistaId,
-      'primeiroNome' : this.primeiroNome,
-      'sobrenome' : this.sobrenome,
-      'dataNascimento' : this.dataNascimento,
-      'localNascimento' : this.localNascimento,
-      'dataMorte' : this.dataMorte,
-      'localMorte' : this.localMorte,
-      'ocupacao' : this.ocupacao
+    Map<String, dynamic> historiaMap = {
+      'histId' : this.histId,
+      'titulo' : this.titulo,
+      'descricao' : this.descricao,
+      'dataHist' : this.dataHist,
+      'localHist' : this.localHist,
+      'idCientRel' : this.idCientRel,
+      'tipoAcontecimento' : this.tipoAcontecimento,
+      'referencias' : this.referencias
     };
-    return cientistaMap;
+    return historiaMap;
   }
 
   @override

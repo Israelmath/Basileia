@@ -1,18 +1,27 @@
-import 'package:basileia/screens/home.page.dart';
+import 'package:basileia/screens/home/home.controller.dart';
+import 'package:basileia/screens/home/home.page.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
-import 'apiClient/client.dart';
+void main() {
 
-void main() => runApp(MyApp());
+  GetIt getIt = GetIt.I;
+  getIt.registerSingleton<HomeController>(HomeController());
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget mainBG() => Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Colors.purple[400].withOpacity(0.65),
-            Colors.deepOrange[300].withOpacity(0.65),
-          ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          gradient: LinearGradient(
+            colors: [
+              Colors.purple[300].withOpacity(0.65),
+              Colors.deepOrange[300].withOpacity(0.65),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
       );
 
@@ -24,15 +33,15 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Basileia'),
-          elevation: 2,
-          backgroundColor: Colors.black54,
-        ),
+        // appBar: AppBar(
+        //   title: Text('Basileia'),
+        //   elevation: 2,
+        //   backgroundColor: Colors.black54,
+        // ),
         body: Stack(
           children: <Widget>[
             mainBG(),
-            Home(),
+            HomePage(),
           ],
         ),
       ),

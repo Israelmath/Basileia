@@ -15,14 +15,14 @@ final String tblCientista = 'cientistas';
 
 final String strCreateComand =
     "CREATE TABLE cientistas("
-    "$cientistaId INT PRIMARY KEY AUTO_INCREMENT,"
+    "$cientistaId INTEGER PRIMARY KEY AUTOINCREMENT,"
     "$primeiroNome TEXT NOT NULL,"
     "$sobrenome TEXT NOT NULL,"
-    "$dataNascimento DATE NOT NULL,"
+    "$dataNascimento TEXT NOT NULL,"
     "$localNascimento TEXT NULL,"
-    "$dataMorte DATE NOT NULL,"
+    "$dataMorte TEXT NOT NULL,"
     "$localMorte TEXT NULL,"
-    "$ocupacao TEXT NULL";
+    "$ocupacao TEXT NULL)";
 
 class CientistaDao {
 
@@ -34,10 +34,11 @@ class CientistaDao {
 
   Database _db;
 
-  get db {
+  Future<Database> get db async {
     if (_db != null) return _db;
     else{
-      _db = initDb();
+      _db = await initDb();
+      return _db;
     }
   }
 
@@ -52,7 +53,13 @@ class CientistaDao {
 
   Future<Cientista> salvaCientista(Cientista cientista) async {
     Database dbCientista = await db;
-    cientista.cientistaId = await dbCientista.insert(tblCientista, cientista.toMap());
+
+    String strComandoInsert = "INSERT INTO $tblCientista "
+        "($primeiroNome, $sobrenome, $dataNascimento, $localNascimento, $dataMorte, $localMorte, $ocupacao) "
+        "VALUES "
+        "(?, ?, ?, ?, ?, ?, ?)";
+
+    cientista.cientistaId = await dbCientista.rawInsert(strComandoInsert, cientista.toList());
     return cientista;
   }
 
@@ -67,9 +74,10 @@ class CientistaDao {
     return await dbCientista.delete(tblCientista, where: '$cientistaId = ?', whereArgs: [id]);
   }
 
-  Future<List> buscaTodos() async {
+  Future<Cientista> buscaTodos() async {
     Database dbCientista = await db;
-    List<Map<String, dynamic>> cientistasList = await dbCientista.rawQuery("SELECT * FROM $tblCientista");
-    return cientistasList;
+    List<Map<String, dynamic>> cientistasMaps = await dbCientista.rawQuery("SELECT * FROM $tblCientista");
+
+    return Cientista.fromMap(cientistasMaps[0]);
   }
 }
