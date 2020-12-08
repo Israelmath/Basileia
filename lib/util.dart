@@ -22,3 +22,8 @@ String traduzMes(int mes){
   };
   return meses[mes];
 }
+
+class MyImages{
+  final String mundo = 'assets/images/Mundo.jpg';
+  final String brasil = 'assets/images/Brasil.png';
+}

@@ -63,18 +63,18 @@ class CientistaDao {
     return cientista;
   }
 
-  Future<List> buscaCientista(int id) async {
-    Database dbCientista = await db;
-    List<Map<String, dynamic>> cientistasList = await dbCientista.query(tblCientista, where: '$cientistaId = ?', whereArgs: [id]);
-    return cientistasList;
-  }
+  // Future<List> buscaCientista(int id) async {
+  //   Database dbCientista = await db;
+  //   List<Map<String, dynamic>> cientistasList = await dbCientista.query(tblCientista, where: '$cientistaId = ?', whereArgs: [id]);
+  //   return cientistasList;
+  // }
 
   deletarCientista(int id) async {
     Database dbCientista = await db;
     return await dbCientista.delete(tblCientista, where: '$cientistaId = ?', whereArgs: [id]);
   }
 
-  Future<Cientista> buscaTodos() async {
+  Future<Cientista> buscaCientista() async {
     Database dbCientista = await db;
     List<Map<String, dynamic>> cientistasMaps = await dbCientista.rawQuery("SELECT * FROM $tblCientista");
 

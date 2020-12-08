@@ -22,7 +22,7 @@ final String strCreateComand =
     "$descricao TEXT NOT NULL,"
     "$dataHist TEXT NOT NULL,"
     "$localHist TEXT NULL,"
-    "$idCientRel DATE NOT NULL,"
+    "$idCientRel INT NOT NULL,"
     "$tipoAcontecimento TEXT NULL,"
     "$referencias TEXT NULL";
 

@@ -30,6 +30,6 @@ abstract class HomeControllerBase with Store {
 
   @action
   Future<List<dynamic>> buscarEventos() async {
-    return [await daoCientista.buscaTodos()];
+    return [await daoCientista.buscaCientista()];
   }
 }

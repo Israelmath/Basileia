@@ -1,3 +1,5 @@
+import 'package:basileia/dao/daoCientista.dart';
+import 'package:basileia/models/cientistaModel.dart';
 import 'package:basileia/util.dart';
 import 'package:basileia/widgets/info.card.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,7 @@ class HomePage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            'Leonhard Paul Euler',
+            '${this.homeController.cientista.primeiroNome} ${this.homeController.cientista.sobrenome}',
             style: TextStyle(
               fontFamily: 'Ubuntu',
               fontSize: 24,
@@ -51,10 +53,16 @@ class HomePage extends StatelessWidget {
                 // return Text('Erro desconhecido');
                 return Flexible(
                   child: ListView.builder(
-                    itemCount: 1,
                     itemBuilder: (context, index) {
-                      print(listaEventos);
-                      return Center(child: CircularProgressIndicator(backgroundColor: Colors.white,),);
+                      Cientista evento = listaEventos[index];
+                      return Center(
+                        child: InfoCard(
+                          iconLeft: this.homeController.assets.idea,
+                          localidade: evento.localNascimento,
+                          ano: evento.dataNascimento.year.toString(),
+                          evento: 'Nascimento',
+                        ),
+                      );
                     },
                   ),
                 );

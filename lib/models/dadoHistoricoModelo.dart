@@ -6,7 +6,7 @@ class Historia{
   DateTime dataHist;
   String localHist;
   DateTime idCientRel;
-  String tipoAcontecimento;
+  int tipoAcontecimento;
   String referencias;
 
   Historia.fromMap(Map<String, dynamic> historia){
