@@ -5,15 +5,26 @@ class Historia{
   String descricao;
   DateTime dataHist;
   String localHist;
-  DateTime idCientRel;
+  int idCientRel;
   int tipoAcontecimento;
   String referencias;
+
+  Historia({
+    this.histId,
+    this.titulo,
+    this.descricao,
+    this.dataHist,
+    this.localHist,
+    this.idCientRel,
+    this.tipoAcontecimento,
+    this.referencias
+  });
 
   Historia.fromMap(Map<String, dynamic> historia){
     this.histId = historia["histId"];
     this.titulo = historia["titulo"];
     this.descricao = historia["descricao"];
-    this.dataHist = historia["dataHist"];
+    this.dataHist = DateTime.parse(historia["dataHist"]);
     this.localHist = historia["localHist"];
     this.idCientRel = historia["idCientRel"];
     this.tipoAcontecimento = historia["tipoAcontecimento"];
@@ -25,13 +36,20 @@ class Historia{
       'histId' : this.histId,
       'titulo' : this.titulo,
       'descricao' : this.descricao,
-      'dataHist' : this.dataHist,
+      'dataHist' : this.dataHist.toIso8601String(),
       'localHist' : this.localHist,
       'idCientRel' : this.idCientRel,
       'tipoAcontecimento' : this.tipoAcontecimento,
       'referencias' : this.referencias
     };
     return historiaMap;
+  }
+
+  toList({bool comId}){
+    if (comId != null)
+    return [this.histId, this.titulo, this.descricao, this.dataHist, this.localHist, this.idCientRel, this.tipoAcontecimento, this.referencias];
+    else
+      return [this.titulo, this.descricao, this.dataHist.toIso8601String(), this.localHist, this.idCientRel, this.tipoAcontecimento, this.referencias];
   }
 
   @override

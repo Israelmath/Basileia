@@ -16,15 +16,15 @@ final String referencias = 'referencias';
 final String tblHistoria = 'historia';
 
 final String strCreateComand =
-    "CREATE TABLE hists("
-    "$histId INT PRIMARY KEY AUTO_INCREMENT,"
+    "CREATE TABLE $tblHistoria("
+    "$histId INTEGER PRIMARY KEY AUTOINCREMENT,"
     "$titulo TEXT NOT NULL,"
     "$descricao TEXT NOT NULL,"
     "$dataHist TEXT NOT NULL,"
     "$localHist TEXT NULL,"
-    "$idCientRel INT NOT NULL,"
+    "$idCientRel INTEGER NULL,"
     "$tipoAcontecimento TEXT NULL,"
-    "$referencias TEXT NULL";
+    "$referencias TEXT NULL)";
 
 class HistDao {
 
@@ -36,10 +36,11 @@ class HistDao {
 
   Database _db;
 
-  get db {
+  get db async {
     if (_db != null) return _db;
     else{
-      _db = initDb();
+      _db = await initDb();
+      return _db;
     }
   }
 
@@ -49,12 +50,18 @@ class HistDao {
 
     return await openDatabase(path, version: 1, onCreate: (Database db, int newerVersion) async {
       await db.execute(strCreateComand);
-    });
+    }, onDowngrade: onDatabaseDowngradeDelete);
   }
 
   Future<Historia> salvaHist(Historia hist) async {
     Database dbHist = await db;
-    hist.histId = await dbHist.insert(tblHistoria, hist.toMap());
+
+    String comando = "INSERT INTO $tblHistoria "
+        "($titulo, $descricao, $dataHist, $localHist, $idCientRel, $tipoAcontecimento, $referencias) "
+        "VALUES "
+        "(?, ?, ?, ?, ?, ?, ?)";
+    print('hist: $hist');
+    hist.histId = await dbHist.rawInsert(comando, hist.toList());
     return hist;
   }
 

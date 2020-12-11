@@ -9,8 +9,11 @@ import '../../util.dart';
 class HistoriaPage extends StatelessWidget {
   HistoriaController historiaController = GetIt.I.get<HistoriaController>();
 
+
   @override
   Widget build(BuildContext context) {
+    this.historiaController.iniciar();
+
     Size size = MediaQuery.of(context).size;
     return Column(
       children: [

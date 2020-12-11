@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:basileia/models/cientistaModel.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -14,7 +16,7 @@ final String ocupacao = 'ocupacao';
 final String tblCientista = 'cientistas';
 
 final String strCreateComand =
-    "CREATE TABLE cientistas("
+    "CREATE TABLE $tblCientista("
     "$cientistaId INTEGER PRIMARY KEY AUTOINCREMENT,"
     "$primeiroNome TEXT NOT NULL,"
     "$sobrenome TEXT NOT NULL,"
@@ -63,21 +65,34 @@ class CientistaDao {
     return cientista;
   }
 
-  // Future<List> buscaCientista(int id) async {
-  //   Database dbCientista = await db;
-  //   List<Map<String, dynamic>> cientistasList = await dbCientista.query(tblCientista, where: '$cientistaId = ?', whereArgs: [id]);
-  //   return cientistasList;
-  // }
+  Future<List> buscaCientista({int id}) async {
+    Database dbCientista = await db;
+    String comando;
+
+    if (id == null)
+      comando = 'SELECT * FROM cientistas LIMIT 1';
+    else
+      comando = 'SELECT * FROM cientistas WHERE $cientistaId = $id';
+
+    List<Map<String, dynamic>> cientistasList = await dbCientista.rawQuery(comando);
+
+    return cientistasList;
+  }
 
   deletarCientista(int id) async {
     Database dbCientista = await db;
     return await dbCientista.delete(tblCientista, where: '$cientistaId = ?', whereArgs: [id]);
   }
 
-  Future<Cientista> buscaCientista() async {
+  Future<List<Cientista>> buscaTodos() async {
     Database dbCientista = await db;
     List<Map<String, dynamic>> cientistasMaps = await dbCientista.rawQuery("SELECT * FROM $tblCientista");
 
-    return Cientista.fromMap(cientistasMaps[0]);
+    List <Cientista> listCientistasModel = List();
+    cientistasMaps.forEach((element) {
+      listCientistasModel.add(Cientista.fromMap(element));
+    });
+
+    return listCientistasModel;
   }
 }
