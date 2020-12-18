@@ -1,76 +1,122 @@
-import 'package:basileia/dao/daoCientista.dart';
-import 'package:basileia/models/cientistaModel.dart';
-import 'package:basileia/util.dart';
+import 'package:basileia/screens/backgrounds.dart';
+import 'package:basileia/screens/historia/historia.page.dart';
 import 'package:basileia/widgets/info.card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 import 'home.controller.dart';
 import 'home.header.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   HomeController homeController = GetIt.I.get<HomeController>();
 
   @override
-  Widget build(BuildContext context) {
-    homeController.iniciar();
+  void initState() {
+    super.initState();
+    homeController.iniciar(context);
+  }
 
-    return Column(
-      children: <Widget>[
-        homeHeader(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            '${this.homeController.cientista.primeiroNome} ${this.homeController.cientista.sobrenome}',
-            style: TextStyle(
-              fontFamily: 'Ubuntu',
-              fontSize: 24,
-            ),
-          ),
-        ),
-        InfoCard(
-          iconLeft: homeController.assets.birth,
-          localidade: this.homeController.cientista.localNascimento,
-          ano: this.homeController.cientista.dataNascimento.year.toString(),
-          evento:
-              'Nascimento de \n${this.homeController.cientista.primeiroNome} ${this.homeController.cientista.sobrenome}\n\n${this.homeController.cientista.dataNascimento.day} de ${traduzMes(this.homeController.cientista.dataNascimento.month)} de ${this.homeController.cientista.dataNascimento.year}',
-        ),
-        FutureBuilder<List<dynamic>>(
-          initialData: List(),
-          future: this.homeController.buscarEventos(),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                break;
-              case ConnectionState.waiting:
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              case ConnectionState.active:
-                break;
-              case ConnectionState.done:
-                final List listaEventos = snapshot.data;
-                // return Text('Erro desconhecido');
-                return Flexible(
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      Cientista evento = listaEventos[index];
-                      return Center(
-                        child: InfoCard(
-                          iconLeft: this.homeController.assets.idea,
-                          localidade: evento.localNascimento,
-                          ano: evento.dataNascimento.year.toString(),
-                          evento: 'Nascimento',
-                        ),
+  @override
+  Widget build(BuildContext context) {
+
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.add_outlined),
+        onPressed: () =>
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => HistoriaPage(),
+              ),
+            ).then((value) => setState((){})),
+      ),
+      body: Stack(
+        children: <Widget>[
+          LRBackground(),
+          Column(
+            children: <Widget>[
+              homeHeader(),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Observer(builder: (_) {
+                  return Text(
+                    '${this.homeController.cientista.nomeCientista}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontFamily: 'Ubuntu',
+                        fontSize: 24,
+                        color: Colors.white),
+                  );
+                }),
+              ),
+              Container(
+                width: size.width,
+                height: size.height*0.65,
+                child: Stack(
+                  children: [
+                    Observer(builder: (_){
+                      return FutureBuilder<List>(
+                        initialData: List(),
+                        future: this.homeController.buscarInfosHome(),
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.none:
+                              break;
+                            case ConnectionState.waiting:
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            case ConnectionState.active:
+                              break;
+                            case ConnectionState.done:
+                              final List listaEventos = snapshot.data;
+                              // return Text('Erro desconhecido');
+                              if (listaEventos.isEmpty)
+                                return Center(
+                                  child: Text('Nenhuma informação cadastrada'),
+                                );
+                              return ListView.builder(
+                                itemCount: listaEventos.length,
+                                itemBuilder: (context, index) {
+                                  return Center(
+                                    child: InfoCard(listaEventos[index]),
+                                  );
+                                },
+                              );
+                          }
+                          return Text('Erro desconhecido');
+                        },
                       );
-                    },
-                  ),
-                );
-            }
-            return Text('Erro desconhecido');
-          },
-        )
-      ],
+                    }),
+                    Observer(
+                      builder: (_) {
+                        return Visibility(
+                          visible: this.homeController.loading,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black12.withOpacity(0.8),
+                            ),
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // HistoriaPage(),
+        ],
+      ),
     );
   }
 }

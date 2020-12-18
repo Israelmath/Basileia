@@ -1,55 +1,55 @@
 class Historia{
 
-  int histId;
+  int dadoId;
   String titulo;
-  String descricao;
+  String nomeCientista;
   DateTime dataHist;
   String localHist;
-  int idCientRel;
   int tipoAcontecimento;
-  String referencias;
+  String descricao;
+  String referencia;
 
   Historia({
-    this.histId,
+    this.dadoId,
     this.titulo,
-    this.descricao,
+    this.nomeCientista,
     this.dataHist,
     this.localHist,
-    this.idCientRel,
     this.tipoAcontecimento,
-    this.referencias
+    this.descricao,
+    this.referencia
   });
 
   Historia.fromMap(Map<String, dynamic> historia){
-    this.histId = historia["histId"];
+    this.dadoId = historia["dadoId"];
     this.titulo = historia["titulo"];
-    this.descricao = historia["descricao"];
+    this.nomeCientista = historia["nomeCientista"];
     this.dataHist = DateTime.parse(historia["dataHist"]);
     this.localHist = historia["localHist"];
-    this.idCientRel = historia["idCientRel"];
     this.tipoAcontecimento = historia["tipoAcontecimento"];
-    this.referencias = historia["referencias"];
+    this.descricao = historia["descricao"];
+    this.referencia = historia["referencia"];
   }
 
   toMap(){
     Map<String, dynamic> historiaMap = {
-      'histId' : this.histId,
+      'dadoId' : this.dadoId,
       'titulo' : this.titulo,
-      'descricao' : this.descricao,
+      'nomeCientista' : this.nomeCientista,
       'dataHist' : this.dataHist.toIso8601String(),
       'localHist' : this.localHist,
-      'idCientRel' : this.idCientRel,
       'tipoAcontecimento' : this.tipoAcontecimento,
-      'referencias' : this.referencias
+      'descricao' : this.descricao,
+      'referencia' : this.referencia
     };
     return historiaMap;
   }
 
   toList({bool comId}){
     if (comId != null)
-    return [this.histId, this.titulo, this.descricao, this.dataHist, this.localHist, this.idCientRel, this.tipoAcontecimento, this.referencias];
+    return [this.dadoId, this.titulo, this.nomeCientista, this.dataHist, this.localHist, this.tipoAcontecimento, this.descricao, this.referencia];
     else
-      return [this.titulo, this.descricao, this.dataHist.toIso8601String(), this.localHist, this.idCientRel, this.tipoAcontecimento, this.referencias];
+      return [this.titulo, this.nomeCientista, this.dataHist.toIso8601String(), this.localHist, this.tipoAcontecimento, this.descricao, this.referencia];
   }
 
   @override

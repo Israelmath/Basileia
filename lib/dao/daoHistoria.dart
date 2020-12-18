@@ -2,29 +2,28 @@ import 'package:basileia/models/dadoHistoricoModelo.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import '../util.dart';
 
-enum enumTipoAcontecimento { mundo, local, brasil }
-
-final String histId = 'histId';
+final String dadoId = 'dadoId';
 final String titulo = 'titulo';
-final String descricao = 'descricao';
+final String nomeCientista = 'nomeCientista';
 final String dataHist = 'dataHist';
 final String localHist = 'localHist';
-final String idCientRel = 'idCientRel';
 final String tipoAcontecimento = 'tipoAcontecimento';
-final String referencias = 'referencias';
-final String tblHistoria = 'historia';
+final String descricao = 'descricao';
+final String referencia = 'referencia';
+final String tblHistoria = 'dadosHistoricos';
 
 final String strCreateComand =
-    "CREATE TABLE $tblHistoria("
-    "$histId INTEGER PRIMARY KEY AUTOINCREMENT,"
-    "$titulo TEXT NOT NULL,"
-    "$descricao TEXT NOT NULL,"
-    "$dataHist TEXT NOT NULL,"
+    "CREATE TABLE dadosHistoricos("
+    "$dadoId INTEGER PRIMARY KEY AUTOINCREMENT,"
+    "$titulo TEXT NULL,"
+    "$nomeCientista TEXT NULL,"
+    "$dataHist TEXT NULL,"
     "$localHist TEXT NULL,"
-    "$idCientRel INTEGER NULL,"
-    "$tipoAcontecimento TEXT NULL,"
-    "$referencias TEXT NULL)";
+    "$tipoAcontecimento INT NULL,"
+    "$descricao TEXT NULL,"
+    "$referencia TEXT NULL)";
 
 class HistDao {
 
@@ -53,32 +52,92 @@ class HistDao {
     }, onDowngrade: onDatabaseDowngradeDelete);
   }
 
-  Future<Historia> salvaHist(Historia hist) async {
+  Future<Historia> salvarDadoHistorico (Historia hist) async {
     Database dbHist = await db;
+    String comandoInsert;
 
-    String comando = "INSERT INTO $tblHistoria "
-        "($titulo, $descricao, $dataHist, $localHist, $idCientRel, $tipoAcontecimento, $referencias) "
-        "VALUES "
-        "(?, ?, ?, ?, ?, ?, ?)";
-    print('hist: $hist');
-    hist.histId = await dbHist.rawInsert(comando, hist.toList());
+    if (hist.tipoAcontecimento == 0 || hist.tipoAcontecimento == 1) {
+      comandoInsert = "INSERT INTO $tblHistoria"
+          "($nomeCientista, $dataHist, "
+          "$localHist, $tipoAcontecimento, "
+          "$titulo, $referencia) "
+          "VALUES "
+          "('${hist.nomeCientista}', '${hist.dataHist.toIso8601String()}', "
+          "'${hist.localHist}', ${hist.tipoAcontecimento}, "
+          "'${hist.titulo}', '${hist.referencia}')";
+    }
+    else {
+      comandoInsert = "INSERT INTO $tblHistoria"
+          "($titulo, $dataHist, "
+          "$localHist, $tipoAcontecimento, "
+          "$descricao, $referencia) "
+          "VALUES "
+          "('${hist.titulo}', '${hist.dataHist.toIso8601String()}', "
+          "'${hist.localHist}', ${hist.tipoAcontecimento}, "
+          "'${hist.descricao}', '${hist.referencia}')";
+    }
+
+    print(comandoInsert);
+    hist.dadoId = await dbHist.rawInsert(comandoInsert);
     return hist;
   }
 
   Future<List> buscaHist(int id) async {
     Database dbHist = await db;
-    List<Map<String, dynamic>> histsList = await dbHist.query(tblHistoria, where: '$histId = ?', whereArgs: [id]);
+    List<Map<String, dynamic>> histsList = await dbHist.query(tblHistoria, where: '$dadoId = ?', whereArgs: [id]);
     return histsList;
   }
 
   deletarHist(int id) async {
     Database dbHist = await db;
-    return await dbHist.delete(tblHistoria, where: '$histId = ?', whereArgs: [id]);
+    return await dbHist.delete(tblHistoria, where: '$dadoId = ?', whereArgs: [id]);
+  }
+
+  buscaCientista(int id) async {
+    Database dbHist = await db;
+    String comandoBusca = 'SELECT * FROM $tblHistoria WHERE $dadoId = $id';
+
+    List<Map<String, dynamic>> cientista = await dbHist.rawQuery(comandoBusca);
+    if (cientista.isEmpty) return new Historia();
+    else return Historia.fromMap(cientista[0]);
   }
 
   Future<List> buscaTodos() async {
     Database dbHist = await db;
     List<Map<String, dynamic>> histsList = await dbHist.rawQuery("SELECT * FROM $tblHistoria");
     return histsList;
+  }
+
+  Future<List<Map<String, dynamic>>> buscaInfoHome() async {
+    Database dbHist = await db;
+    List<Map<String, dynamic>> eventosHome = List();
+
+    String comandoBusca = 'SELECT * FROM dadosHistoricos '
+        '                     WHERE nomeCientista IS NOT NULL '
+        '                         AND tipoAcontecimento = 0 ';
+
+    List<Map<String, dynamic>> cientista = await dbHist.rawQuery(comandoBusca);
+    cientista.forEach((element) {
+      eventosHome.add(element);
+    });
+
+    comandoBusca = ' SELECT * FROM dadosHistoricos '
+        '              WHERE nomeCientista IS NULL ';
+
+    cientista = await dbHist.rawQuery(comandoBusca);
+    cientista.forEach((element) {
+      eventosHome.add(element);
+    });
+
+    comandoBusca = 'SELECT * FROM dadosHistoricos '
+        '            WHERE nomeCientista IS NOT NULL '
+        '             AND tipoAcontecimento = 1 ';
+
+    cientista = await dbHist.rawQuery(comandoBusca);
+    cientista.forEach((element) {
+      eventosHome.add(element);
+    });
+
+    return eventosHome;
   }
 }

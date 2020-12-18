@@ -7,7 +7,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 
 void main() {
-
   GetIt getIt = GetIt.I;
   getIt.registerSingleton<HomeController>(HomeController());
   getIt.registerSingleton<HistoriaController>(HistoriaController());
@@ -16,21 +15,10 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  @override
-  Widget homeBG() => Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.purple[300].withOpacity(0.65),
-              Colors.deepOrange[300].withOpacity(0.65),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-      );
+  HomeController homeController = GetIt.I.get<HomeController>();
 
   Widget build(BuildContext context) {
+    this.homeController.iniciar(context);
     return MaterialApp(
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
@@ -42,16 +30,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        floatingActionButton: FloatingActionButton(),
-        body: Stack(
-          children: <Widget>[
-            homeBG(),
-            // HomePage(),
-            HistoriaPage(),
-          ],
-        ),
-      ),
+      home: HomePage(),
     );
   }
 }

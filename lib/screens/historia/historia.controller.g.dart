@@ -55,6 +55,22 @@ mixin _$HistoriaController on HistoriaControllerBase, Store {
     });
   }
 
+  final _$tipoSelecionadoAtom =
+      Atom(name: 'HistoriaControllerBase.tipoSelecionado');
+
+  @override
+  String get tipoSelecionado {
+    _$tipoSelecionadoAtom.reportRead();
+    return super.tipoSelecionado;
+  }
+
+  @override
+  set tipoSelecionado(String value) {
+    _$tipoSelecionadoAtom.reportWrite(value, super.tipoSelecionado, () {
+      super.tipoSelecionado = value;
+    });
+  }
+
   final _$tituloAtom = Atom(name: 'HistoriaControllerBase.titulo');
 
   @override
@@ -79,6 +95,17 @@ mixin _$HistoriaController on HistoriaControllerBase, Store {
         name: 'HistoriaControllerBase.atualizaTituloEvento');
     try {
       return super.atualizaTituloEvento(novoTitulo);
+    } finally {
+      _$HistoriaControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic atualizaTipo(String tipoEscolhido) {
+    final _$actionInfo = _$HistoriaControllerBaseActionController.startAction(
+        name: 'HistoriaControllerBase.atualizaTipo');
+    try {
+      return super.atualizaTipo(tipoEscolhido);
     } finally {
       _$HistoriaControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -112,6 +139,7 @@ mixin _$HistoriaController on HistoriaControllerBase, Store {
 dataEvento: ${dataEvento},
 imagem: ${imagem},
 paisSelecionado: ${paisSelecionado},
+tipoSelecionado: ${tipoSelecionado},
 titulo: ${titulo}
     ''';
   }
